@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="theme-color" content="#090a0c" />
+  <title>IRON & RAW v2.0 | Strength & Nutrition Auto-Regulator</title>
+  <style>
+    :root {
+      --bg: #090a0c;
+      --card: #121418;
+      --border: #262930;
+      --gold: #c89d54;
+      --gold-dim: #8c6a32;
+      --text: #ececec;
+      --muted: #8e939e;
+      --danger: #d9534f;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, sans-serif;
+    }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 16px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .header {
+      text-align: center;
+      padding: 20px 12px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 20px;
+    }
+    .badge {
+      display: inline-block;
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold);
+      border: 1px solid var(--gold-dim);
+      padding: 4px 10px;
+      border-radius: 4px;
+      margin-bottom: 8px;
+    }
+    h1 {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .subtitle {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .card-title {
+      font-size: 15px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--gold);
+      margin-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--text);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    input, select {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 16px;
+      background: #0d0f12;
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 6px;
+      font-size: 15px;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--gold);
+    }
+    button {
+      width: 100%;
+      padding: 14px;
+      background: var(--gold);
+      color: #000;
+      font-weight: 800;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:active {
+      opacity: 0.85;
+    }
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 16px;
+    }
+    .stat-box {
+      background: #0d0f12;
+      border: 1px solid var(--border);
+      padding: 12px;
+      border-radius: 6px;
+    }
+    .stat-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .stat-value {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--gold);
+      margin-top: 4px;
+    }
+    .stat-note {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+    .plate-box {
+      margin-top: 12px;
+      background: #0d0f12;
+      border: 1px dashed var(--gold-dim);
+      padding: 12px;
+      border-radius: 6px;
+      font-size: 13px;
+    }
+    .mineral-list {
+      margin-top: 16px;
+      background: #0d0f12;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 14px;
+    }
+    .mineral-item {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      padding: 6px 0;
+      border-bottom: 1px solid #1b1e24;
+    }
+    .mineral-item:last-child {
+      border-bottom: none;
+    }
+    .cue-box {
+      margin-top: 12px;
+      padding: 14px;
+      background: rgba(200, 157, 84, 0.08);
+      border-left: 3px solid var(--gold);
+      font-size: 13px;
+    }
+    .check-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid #1b1e24;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .check-row:last-child {
+      border-bottom: none;
+    }
+    .check-row input {
+      width: 20px;
+      height: 20px;
+      margin: 0;
+      accent-color: var(--gold);
+    }
+    .hidden {
+      display: none;
+    }
+    .error-msg {
+      color: var(--danger);
+      font-size: 13px;
+      margin-top: 10px;
+      text-align: center;
+    }
+    .reset-link {
+      font-size: 11px;
+      color: var(--muted);
+      text-decoration: underline;
+      cursor: pointer;
+      font-weight: normal;
+    }
+    footer {
+      text-align: center;
+      font-size: 11px;
+      color: var(--muted);
+      padding: 20px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="badge">Zero Matrix Protocol • v2.0</div>
+    <h1>Iron & Raw Auto-Regulator</h1>
+    <div class="subtitle">C.A.T. Force Mechanics & Ancestral Ruminant Nutrition</div>
+  </div>
+
+  <!-- VIP ACCESS GATE -->
+  <div id="lock-screen" class="card">
+    <div class="card-title">Member Access Gate</div>
+    <p style="font-size: 13px; color: var(--muted); margin-bottom: 16px;">
+      Enter your member unlock code to activate the C.A.T. Load Auto-Regulator and Raw Nutrition Engine on this device.
+    </p>
+    <label for="passcode">VIP Access Code</label>
+    <input type="password" id="passcode" placeholder="Enter VIP Code..." onkeydown="if(event.key==='Enter') unlockApp()" />
+    <button onclick="unlockApp()">Unlock Protocol</button>
+    <div id="lock-error" class="error-msg hidden">Invalid access code. Check your purchase receipt.</div>
+  </div>
+
+  <!-- MAIN APPLICATION -->
+  <div id="app-content" class="hidden">
+
+    <!-- MODULE 1: RAW NUTRITION -->
+    <div class="card">
+      <div class="card-title">
+        <span>1. Raw Ruminant & Mineral Engine</span>
+      </div>
+      <label for="weight">Current Body Weight (kg)</label>
+      <input type="number" id="weight" value="95" min="40" max="180" onchange="calculateNutrition()" />
+
+      <label for="goal">Primary Phase Objective</label>
+      <select id="goal" onchange="calculateNutrition()">
+        <option value="mass">Dense Mass & Raw Strength (Surplus)</option>
+        <option value="recomp">Armor Recomposition (Maintenance)</option>
+        <option value="cut">Lean Combat Readiness (Deficit)</option>
+      </select>
+
+      <label for="dayType">Today's Schedule</label>
+      <select id="dayType" onchange="calculateNutrition()">
+        <option value="training">Heavy Compound Training Day</option>
+        <option value="rest">CNS Recovery / Rest Day</option>
+      </select>
+
+      <label for="carbMode">Rest-Day Glycogen Protocol</label>
+      <select id="carbMode" onchange="calculateNutrition()">
+        <option value="full">Full Glycogen Reload (Keep Carbs High on Rest Days)</option>
+        <option value="taper">Rest-Day Taper (-40% Carbs on Rest Days)</option>
+        <option value="lockdown">Strict Rest-Day Carb Lockdown (Zero/Trace Carbs)</option>
+      </select>
+
+      <button onclick="calculateNutrition()">Update Daily Fuel</button>
+
+      <div id="nutrition-results">
+        <div class="results-grid">
+          <div class="stat-box">
+            <div class="stat-label">Ruminant Beef</div>
+            <div class="stat-value" id="out-beef">0g</div>
+            <div class="stat-note">Raw weight / day</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Whole Eggs</div>
+            <div class="stat-value" id="out-eggs">0</div>
+            <div class="stat-note">Desi / Pasture-raised</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Desi Ghee / White Butter</div>
+            <div class="stat-value" id="out-ghee">0 tbsp</div>
+            <div class="stat-note">100% Seed-Oil Free</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">White Rice / Potatoes</div>
+            <div class="stat-value" id="out-carbs">0g</div>
+            <div class="stat-note">Cooked weight</div>
+          </div>
+        </div>
+
+        <div class="mineral-list">
+          <div style="font-size:12px; font-weight:700; color:var(--gold); margin-bottom:8px; text-transform:uppercase;">
+            Daily Mineral & Joint Armor Stack
+          </div>
+          <div class="mineral-item"><span>Heavy Bone Broth</span><strong id="out-broth">750 ml</strong></div>
+          <div class="mineral-item"><span>Pure Shilajit Resin</span><strong>400 mg (Fasted)</strong></div>
+          <div class="mineral-item"><span>Creatine Monohydrate</span><strong id="out-creatine">5 g</strong></div>
+          <div class="mineral-item"><span>Magnesium Bisglycinate</span><strong>400 mg (Pre-Sleep)</strong></div>
+          <div class="mineral-item"><span>Magnesium Chloride</span><strong>Post-Training / Topical</strong></div>
+          <div class="mineral-item"><span>Zinc Picolinate</span><strong>30 mg (With Beef)</strong></div>
+          <div class="mineral-item"><span>Himalayan Pink Salt</span><strong id="out-salt">8 - 10 g</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODULE 2: CAT STRENGTH AUTO-REGULATOR -->
+    <div class="card">
+      <div class="card-title">
+        <span>2. C.A.T. Load Auto-Regulator</span>
+      </div>
+      <label for="lift">Primary Compound Movement</label>
+      <select id="lift" onchange="loadLiftMax()">
+        <option value="zercher">Zercher Squat (Dead-Stop from Pins)</option>
+        <option value="incline">Incline Barbell / Yoke Press</option>
+        <option value="row">Dead-Stop Heavy Barbell Row</option>
+        <option value="dumbbell">Heavy Incline Dumbbell Press (Per Hand)</option>
+      </select>
+
+      <div id="bar-type-wrap">
+        <label for="barWeight">Barbell / Implement Weight</label>
+        <select id="barWeight" onchange="calculateCAT()">
+          <option value="20">Standard Olympic Barbell (20 kg)</option>
+          <option value="25">Heavy Yoke / Specialty Bar (25 kg)</option>
+        </select>
+      </div>
+
+      <label for="maxWeight" id="max-label">Current 1-Rep Max (kg)</label>
+      <input type="number" id="maxWeight" value="140" min="10" max="450" onchange="saveLiftMax()" />
+
+      <label for="barSpeed">Last Session Bar Velocity & CNS Readiness</label>
+      <select id="barSpeed" onchange="calculateCAT()">
+        <option value="fast">Explosive / High Bar Speed (Push Load)</option>
+        <option value="normal">Solid Control / Standard Grind (Hold Zone)</option>
+        <option value="slow">Sluggish / CNS or Joint Fatigue (Speed Deload)</option>
+      </select>
+
+      <button onclick="calculateCAT()">Calculate Working Protocol</button>
+
+      <div id="cat-results">
+        <div class="results-grid">
+          <div class="stat-box">
+            <div class="stat-label" id="load-title">Working Load</div>
+            <div class="stat-value" id="out-load">0 kg</div>
+            <div class="stat-note" id="out-pct">0% of 1RM</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Sets x Reps</div>
+            <div class="stat-value" id="out-sets">0 x 0</div>
+            <div class="stat-note" id="out-rest">Rest: 0 min</div>
+          </div>
+        </div>
+        <div class="plate-box" id="out-plates"></div>
+        <div class="cue-box" id="out-cue"></div>
+      </div>
+    </div>
+
+    <!-- MODULE 3: POSTURE & ALIGNMENT CHECKLIST -->
+    <div class="card">
+      <div class="card-title">
+        <span>3. Daily Alignment Lock</span>
+        <span class="reset-link" onclick="resetChecks()">Reset</span>
+      </div>
+      <label class="check-row">
+        <input type="checkbox" id="chk-vacuum" onchange="saveChecks()" />
+        <span>Fasted Abdominal Vacuums (5 Sets x 25s)</span>
+      </label>
+      <label class="check-row">
+        <input type="checkbox" id="chk-posture" onchange="saveChecks()" />
+        <span>Anterior Pelvic Tilt & Neck Alignment Drill</span>
+      </label>
+      <label class="check-row">
+        <input type="checkbox" id="chk-purity" onchange="saveChecks()" />
+        <span>Zero Seed Oils / Zero Plastics / Natural Care</span>
+      </label>
+      <label class="check-row">
+        <input type="checkbox" id="chk-walk" onchange="saveChecks()" />
+        <span>Post-Meal Digestion & Recovery Walk</span>
+      </label>
+    </div>
+
+  </div>
+
+  <footer>
+    TIP: TAP "ADD TO HOME SCREEN" IN BROWSER MENU FOR FULL-SCREEN APP MODE<br/>
+    BUILT FOR REAL STRENGTH • NO SYNTHETIC FLUFF
+  </footer>
+
+  <script>
+    // Obfuscated check for "IRON313"
+    const HASH_KEY = "SVJPTjMxMw==";
+
+    const defaultMaxes = {
+      zercher: 140,
+      incline: 110,
+      row: 120,
+      dumbbell: 45
+    };
+
+    window.onload = function() {
+      if (localStorage.getItem("iron_unlocked") === "true") {
+        showApp();
+      }
+    };
+
+    function unlockApp() {
+      const input = document.getElementById("passcode").value.trim().toUpperCase();
+      try {
+        if (btoa(input) === HASH_KEY) {
+          localStorage.setItem("iron_unlocked", "true");
+          showApp();
+          return;
+        }
+      } catch (e) {}
+      document.getElementById("lock-error").classList.remove("hidden");
+    }
+
+    function showApp() {
+      document.getElementById("lock-screen").classList.add("hidden");
+      document.getElementById("app-content").classList.remove("hidden");
+
+      const savedWeight = localStorage.getItem("iron_weight");
+      if (savedWeight) document.getElementById("weight").value = savedWeight;
+
+      const savedGoal = localStorage.getItem("iron_goal");
+      if (savedGoal) document.getElementById("goal").value = savedGoal;
+
+      const savedCarbMode = localStorage.getItem("iron_carbMode");
+      if (savedCarbMode) document.getElementById("carbMode").value = savedCarbMode;
+
+      loadLiftMax();
+      loadChecks();
+      calculateNutrition();
+    }
+
+    function calculateNutrition() {
+      const w = parseFloat(document.getElementById("weight").value) || 85;
+      const goal = document.getElementById("goal").value;
+      const day = document.getElementById("dayType").value;
+      const carbMode = document.getElementById("carbMode").value;
+
+      localStorage.setItem("iron_weight", w);
+      localStorage.setItem("iron_goal", goal);
+      localStorage.setItem("iron_carbMode", carbMode);
+
+      let beefMultiplier = 9.5;
+      let eggs = 6;
+      let ghee = 3;
+      let carbMultiplier = 4.5;
+
+      if (goal === "mass") {
+        beefMultiplier = 10.5;
+        eggs = 8;
+        ghee = 4;
+        carbMultiplier = 6.0;
+      } else if (goal === "cut") {
+        beefMultiplier = 9.0;
+        eggs = 5;
+        ghee = 2;
+        carbMultiplier = 2.5;
+      }
+
+      if (day === "rest") {
+        if (carbMode === "taper") carbMultiplier *= 0.6;
+        if (carbMode === "lockdown") carbMultiplier = 0;
+      }
+
+      const beefGrams = Math.round((w * beefMultiplier) / 25) * 25;
+      const carbGrams = Math.round((w * carbMultiplier) / 25) * 25;
+      const creatine = w >= 90 ? "8 g" : "5 g";
+      const broth = w >= 85 ? "750 ml" : "500 ml";
+      const salt = day === "training" ? "8 - 10 g" : "6 - 8 g";
+
+      document.getElementById("out-beef").innerText = beefGrams + "g";
+      document.getElementById("out-eggs").innerText = eggs + " Whole";
+      document.getElementById("out-ghee").innerText = ghee + " Tbsp";
+      document.getElementById("out-carbs").innerText = carbGrams === 0 ? "Zero Carb" : carbGrams + "g";
+      document.getElementById("out-creatine").innerText = creatine;
+      document.getElementById("out-broth").innerText = broth;
+      document.getElementById("out-salt").innerText = salt;
+    }
+
+    function getSavedMaxes() {
+      const raw = localStorage.getItem("iron_maxes");
+      return raw ? JSON.parse(raw) : defaultMaxes;
+    }
+
+    function loadLiftMax() {
+      const lift = document.getElementById("lift").value;
+      const maxes = getSavedMaxes();
+      document.getElementById("maxWeight").value = maxes[lift] || 100;
+
+      const isDB = lift === "dumbbell";
+      document.getElementById("bar-type-wrap").style.display = isDB ? "none" : "block";
+      document.getElementById("max-label").innerText = isDB
+        ? "Top 1-Rep Max Per Dumbbell (kg)"
+        : "Current 1-Rep Max Total Bar Load (kg)";
+
+      calculateCAT();
+    }
+
+    function saveLiftMax() {
+      const lift = document.getElementById("lift").value;
+      const val = parseFloat(document.getElementById("maxWeight").value) || 50;
+      const maxes = getSavedMaxes();
+      maxes[lift] = val;
+      localStorage.setItem("iron_maxes", JSON.stringify(maxes));
+      calculateCAT();
+    }
+
+    function calculatePlates(totalWeight, barWeight) {
+      let sideWeight = (totalWeight - barWeight) / 2;
+      if (sideWeight <= 0) return "Empty Bar (" + barWeight + " kg)";
+      const plates = [25, 20, 15, 10, 5, 2.5, 1.25];
+      const out = [];
+      for (let p of plates) {
+        let count = Math.floor((sideWeight + 0.01) / p);
+        if (count > 0) {
+          out.push(count + "×" + p + "kg");
+          sideWeight -= count * p;
+        }
+      }
+      return out.length ? "Plates Per Side: " + out.join(" + ") : "Custom Micro-Load";
+    }
+
+    function calculateCAT() {
+      const lift = document.getElementById("lift").value;
+      const max = parseFloat(document.getElementById("maxWeight").value) || 100;
+      const speed = document.getElementById("barSpeed").value;
+      const barW = parseFloat(document.getElementById("barWeight").value) || 20;
+
+      let pct = 0.78;
+      let sets = "6 x 3 (CAT)";
+      let rest = "Rest: 3 min";
+
+      if (speed === "fast") {
+        pct = 0.82;
+        sets = lift === "dumbbell" ? "4 x 6 (Explosive)" : "5 x 3 (CAT)";
+        rest = "Rest: 3.5 min";
+      } else if (speed === "normal") {
+        pct = 0.75;
+        sets = lift === "dumbbell" ? "4 x 8 (CAT)" : "6 x 3 (CAT)";
+        rest = "Rest: 2.5 min";
+      } else if (speed === "slow") {
+        pct = 0.68;
+        sets = "5 x 2 (Velocity Reset)";
+        rest = "Rest: 3 min";
+      }
+
+      const load = Math.round((max * pct) / 2.5) * 2.5;
+
+      const cues = {
+        zercher: "EXECUTION CUE: Brace the abdominal wall 360°, dead-stop 1 full second on the bottom pins to eliminate elastic bounce, and drive up with maximum acceleration.",
+        incline: "EXECUTION CUE: Pack scapulae hard into the bench, control the lowering phase for 2 seconds, pause briefly on the upper chest, and punch the bar up explosively.",
+        row: "EXECUTION CUE: Dead-stop every single rep on the floor. Zero lower-back momentum. Rip the elbows back at maximum velocity.",
+        dumbbell: "EXECUTION CUE: Control the deep stretch at the bottom keeping full shoulder tension, then drive both bells up explosively without clanking at lockout."
+      };
+
+      document.getElementById("load-title").innerText = lift === "dumbbell" ? "Per-Hand DB Load" : "Working Bar Load";
+      document.getElementById("out-load").innerText = load + " kg";
+      document.getElementById("out-pct").innerText = Math.round(pct * 100) + "% of 1RM";
+      document.getElementById("out-sets").innerText = sets;
+      document.getElementById("out-rest").innerText = rest;
+      document.getElementById("out-plates").innerText = lift === "dumbbell"
+        ? "Grab the " + load + " kg dumbbells (each hand)."
+        : calculatePlates(load, barW);
+      document.getElementById("out-cue").innerText = cues[lift];
+    }
+
+    function getTodayKey() {
+      return new Date().toISOString().slice(0, 10);
+    }
+
+    function loadChecks() {
+      const savedDate = localStorage.getItem("iron_check_date");
+      const today = getTodayKey();
+      if (savedDate !== today) {
+        localStorage.setItem("iron_check_date", today);
+        localStorage.removeItem("iron_checks");
+        return;
+      }
+      const checks = JSON.parse(localStorage.getItem("iron_checks") || "{}");
+      ["chk-vacuum", "chk-posture", "chk-purity", "chk-walk"].forEach(id => {
+        document.getElementById(id).checked = !!checks[id];
+      });
+    }
+
+    function saveChecks() {
+      const checks = {};
+      ["chk-vacuum", "chk-posture", "chk-purity", "chk-walk"].forEach(id => {
+        checks[id] = document.getElementById(id).checked;
+      });
+      localStorage.setItem("iron_check_date", getTodayKey());
+      localStorage.setItem("iron_checks", JSON.stringify(checks));
+    }
+
+    function resetChecks() {
+      ["chk-vacuum", "chk-posture", "chk-purity", "chk-walk"].forEach(id => {
+        document.getElementById(id).checked = false;
+      });
+      saveChecks();
+    }
+  </script>
+</body>
+</html>
